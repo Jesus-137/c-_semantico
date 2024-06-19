@@ -19,7 +19,31 @@
         <div class="results">
             <div>
                 <h2>Analisis Léxico</h2>
-                <pre id="lexicalResult"></pre>
+                <table id="lexicalTable" border="1">
+                    <thead>
+                        <tr>
+                            <th>Tokens</th>
+                            <th>PR</th>
+                            <th>ID</th>
+                            <th>Numeros</th>
+                            <th>Simbolos</th>
+                            <th>Error</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Rows will be dynamically added here -->
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th>Total</th>
+                            <td id="totalPR">0</td>
+                            <td id="totalID">0</td>
+                            <td id="totalNumeros">0</td>
+                            <td id="totalSimbolos">0</td>
+                            <td id="totalError">0</td>
+                        </tr>
+                    </tfoot>
+                </table>
             </div>
             <div>
                 <h2>Analisis Sintáctico</h2>
@@ -43,7 +67,67 @@
             })
             .then(response => response.json())
             .then(data => {
-                document.getElementById("lexicalResult").textContent = data.result;
+                // Clear previous table rows
+                const tbody = document.getElementById("lexicalTable").getElementsByTagName("tbody")[0];
+                tbody.innerHTML = '';
+
+                // Populate the table with token classifications
+                const classifications = {
+                    'PR': 0,
+                    'ID': 0,
+                    'Numeros': 0,
+                    'Simbolos': 0,
+                    'Error': 0
+                };
+
+                data.tokens.forEach(token => {
+                    const tr = document.createElement("tr");
+                    const tdToken = document.createElement("td");
+                    const tdPR = document.createElement("td");
+                    const tdID = document.createElement("td");
+                    const tdNumeros = document.createElement("td");
+                    const tdSimbolos = document.createElement("td");
+                    const tdError = document.createElement("td");
+
+                    tdToken.textContent = token[1];
+                    tr.appendChild(tdToken);
+
+                    if (token[0] === 'KEYWORD') {
+                        tdPR.textContent = 'x';
+                        classifications['PR']++;
+                    }
+                    if (token[0] === 'IDENTIFIER') {
+                        tdID.textContent = 'x';
+                        classifications['ID']++;
+                    }
+                    if (token[0] === 'NUMBER') {
+                        tdNumeros.textContent = 'x';
+                        classifications['Numeros']++;
+                    }
+                    if (token[0] === 'SYMBOL') {
+                        tdSimbolos.textContent = 'x';
+                        classifications['Simbolos']++;
+                    }
+                    if (token[0] === 'ERROR') {
+                        tdError.textContent = 'x';
+                        classifications['Error']++;
+                    }
+
+                    tr.appendChild(tdPR);
+                    tr.appendChild(tdID);
+                    tr.appendChild(tdNumeros);
+                    tr.appendChild(tdSimbolos);
+                    tr.appendChild(tdError);
+
+                    tbody.appendChild(tr);
+                });
+
+                // Update the totals in the footer
+                document.getElementById("totalPR").textContent = classifications['PR'];
+                document.getElementById("totalID").textContent = classifications['ID'];
+                document.getElementById("totalNumeros").textContent = classifications['Numeros'];
+                document.getElementById("totalSimbolos").textContent = classifications['Simbolos'];
+                document.getElementById("totalError").textContent = classifications['Error'];
             });
         }
 
@@ -147,6 +231,31 @@
             padding: 10px;
             border-radius: 4px;
             overflow: auto;
+        }
+
+        textarea {
+            background-color: #3cffcb5f;
+            padding: 10px;
+            border-radius: 4px;
+            overflow: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 8px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #accdce;
+        }
+
+        td {
+            background-color: #fff3c29b;
         }
     </style>
 </body>
