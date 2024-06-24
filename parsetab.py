@@ -6,9 +6,9 @@ _tabversion = '3.10'
 
 _lr_method = 'LALR'
 
-_lr_signature = 'CADENA ENTERO EQUALS FIN IDENTIFIER INICIO LBRACE LPAREN PROCESO RBRACE RPAREN SEMICOLON SI VALOR VARIABLE VERprogram : inicio cadena entero proceso si fininicio : INICIO SEMICOLONcadena : CADENA VARIABLE EQUALS VALOR SEMICOLONentero : ENTERO VARIABLE EQUALS VALOR SEMICOLONstatement_block : LBRACE statement si2 RBRACEstatement_block2 : LBRACE statement RBRACEproceso : PROCESO SEMICOLONsi : SI LPAREN VALOR EQUALS EQUALS VALOR RPAREN statement_blockstatement : VER VALOR SEMICOLONsi2 : SI LPAREN VARIABLE EQUALS EQUALS VALOR RPAREN statement_block2fin : FIN SEMICOLON'
+_lr_signature = 'COUT DOTDOT EQUALS HASH IDENTIFIER INCLUDE INT IOSTREAM LBRACE LPAREN MAIN MAYOR MENOR RBRACE RETURN RPAREN SEMICOLON STD VALOR VARIABLEprogram : inicio variable funtionvariable : INT VARIABLE EQUALS VALOR SEMICOLONinicio : HASH INCLUDE MENOR IOSTREAM MAYORfuntion : INT MAIN LPAREN RPAREN statement_blockstatement_block : LBRACE statement return RBRACEreturn : RETURN VALOR SEMICOLONstatement : STD DOTDOT DOTDOT COUT MENOR MENOR VARIABLE SEMICOLON'
     
-_lr_action_items = {'INICIO':([0,],[3,]),'$end':([1,19,24,],[0,-1,-11,]),'CADENA':([2,6,],[5,-2,]),'SEMICOLON':([3,11,18,20,22,37,],[6,16,23,24,26,40,]),'ENTERO':([4,23,],[8,-3,]),'VARIABLE':([5,8,39,],[9,12,41,]),'PROCESO':([7,26,],[11,-4,]),'EQUALS':([9,12,25,27,41,42,],[13,17,27,28,42,43,]),'SI':([10,16,33,40,],[15,-7,36,-9,]),'VALOR':([13,17,21,28,34,43,],[18,22,25,29,37,44,]),'FIN':([14,31,38,],[20,-8,-5,]),'LPAREN':([15,36,],[21,39,]),'RPAREN':([29,44,],[30,45,]),'LBRACE':([30,45,],[32,47,]),'VER':([32,47,],[34,34,]),'RBRACE':([35,40,46,48,49,],[38,-9,-10,49,-6,]),}
+_lr_action_items = {'HASH':([0,],[3,]),'$end':([1,7,19,26,],[0,-1,-4,-5,]),'INT':([2,4,16,18,],[5,8,-3,-2,]),'INCLUDE':([3,],[6,]),'VARIABLE':([5,32,],[9,33,]),'MENOR':([6,30,31,],[10,31,32,]),'MAIN':([8,],[11,]),'EQUALS':([9,],[12,]),'IOSTREAM':([10,],[13,]),'LPAREN':([11,],[14,]),'VALOR':([12,24,],[15,27,]),'MAYOR':([13,],[16,]),'RPAREN':([14,],[17,]),'SEMICOLON':([15,27,33,],[18,29,34,]),'LBRACE':([17,],[20,]),'STD':([20,],[22,]),'RETURN':([21,34,],[24,-7,]),'DOTDOT':([22,25,],[25,28,]),'RBRACE':([23,29,],[26,-6,]),'COUT':([28,],[30,]),}
 
 _lr_action = {}
 for _k, _v in _lr_action_items.items():
@@ -17,7 +17,7 @@ for _k, _v in _lr_action_items.items():
       _lr_action[_x][_k] = _y
 del _lr_action_items
 
-_lr_goto_items = {'program':([0,],[1,]),'inicio':([0,],[2,]),'cadena':([2,],[4,]),'entero':([4,],[7,]),'proceso':([7,],[10,]),'si':([10,],[14,]),'fin':([14,],[19,]),'statement_block':([30,],[31,]),'statement':([32,47,],[33,48,]),'si2':([33,],[35,]),'statement_block2':([45,],[46,]),}
+_lr_goto_items = {'program':([0,],[1,]),'inicio':([0,],[2,]),'variable':([2,],[4,]),'funtion':([4,],[7,]),'statement_block':([17,],[19,]),'statement':([20,],[21,]),'return':([21,],[23,]),}
 
 _lr_goto = {}
 for _k, _v in _lr_goto_items.items():
@@ -27,15 +27,11 @@ for _k, _v in _lr_goto_items.items():
 del _lr_goto_items
 _lr_productions = [
   ("S' -> program","S'",1,None,None,None),
-  ('program -> inicio cadena entero proceso si fin','program',6,'p_program','Analizador.py',85),
-  ('inicio -> INICIO SEMICOLON','inicio',2,'p_inicio','Analizador.py',89),
-  ('cadena -> CADENA VARIABLE EQUALS VALOR SEMICOLON','cadena',5,'p_declaracion','Analizador.py',93),
-  ('entero -> ENTERO VARIABLE EQUALS VALOR SEMICOLON','entero',5,'p_eclaracion2','Analizador.py',99),
-  ('statement_block -> LBRACE statement si2 RBRACE','statement_block',4,'p_statement_block','Analizador.py',105),
-  ('statement_block2 -> LBRACE statement RBRACE','statement_block2',3,'p_statement_block2','Analizador.py',109),
-  ('proceso -> PROCESO SEMICOLON','proceso',2,'p_proceso','Analizador.py',113),
-  ('si -> SI LPAREN VALOR EQUALS EQUALS VALOR RPAREN statement_block','si',8,'p_si','Analizador.py',117),
-  ('statement -> VER VALOR SEMICOLON','statement',3,'p_statement','Analizador.py',121),
-  ('si2 -> SI LPAREN VARIABLE EQUALS EQUALS VALOR RPAREN statement_block2','si2',8,'p_si2','Analizador.py',125),
-  ('fin -> FIN SEMICOLON','fin',2,'p_fin','Analizador.py',146),
+  ('program -> inicio variable funtion','program',3,'p_program','Analizador.py',123),
+  ('variable -> INT VARIABLE EQUALS VALOR SEMICOLON','variable',5,'p_variable','Analizador.py',127),
+  ('inicio -> HASH INCLUDE MENOR IOSTREAM MAYOR','inicio',5,'p_inicio','Analizador.py',132),
+  ('funtion -> INT MAIN LPAREN RPAREN statement_block','funtion',5,'p_declaracion','Analizador.py',136),
+  ('statement_block -> LBRACE statement return RBRACE','statement_block',4,'p_statement_block','Analizador.py',140),
+  ('return -> RETURN VALOR SEMICOLON','return',3,'p_proceso','Analizador.py',144),
+  ('statement -> STD DOTDOT DOTDOT COUT MENOR MENOR VARIABLE SEMICOLON','statement',8,'p_statement','Analizador.py',148),
 ]

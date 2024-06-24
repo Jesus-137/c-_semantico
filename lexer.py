@@ -3,10 +3,10 @@ import ply.lex as lex
 # List of token names
 tokens = [
     'IDENTIFIER',
-    'EQUALS',  'VALOR', 'VARIABLE',
-    'LPAREN', 'RPAREN', 'LBRACE', 'RBRACE',
-    'SEMICOLON',
-    'INICIO', 'CADENA', 'PROCESO', 'SI', 'VER' , 'FIN', 'ENTERO'
+    'EQUALS',  'VALOR', 'VARIABLE', 'HASH',
+    'LPAREN', 'RPAREN', 'LBRACE', 'RBRACE', 'MENOR', 'MAYOR',
+    'SEMICOLON', 'DOTDOT',
+    'INT', 'RETURN', 'MAIN', 'INCLUDE', 'IOSTREAM', 'STD', 'COUT'
 ]
 
 # Regular expression rules for simple tokens
@@ -18,11 +18,15 @@ t_RBRACE = r'\}'
 t_SEMICOLON = r';'
 t_VARIABLE = r'[a-zA-Z_]\w*'
 t_VALOR = r'".*?"|(\d+)'
+t_HASH = r'\#'
+t_DOTDOT = r'\:'
+t_MENOR = r'\<'
+t_MAYOR = r'\>'
 
 # A regular expression rule with some action code
 def t_IDENTIFIER(t):
     r'[a-zA-Z_]\w*'
-    if t.value in ['inicio', 'cadena', 'proceso', 'si', 'ver', 'fin', 'entero']:
+    if t.value in ['int', 'return', 'main', 'include', 'iostream', 'std', 'cout']:
         t.type = t.value.upper()
     else:
         t.type = 'VARIABLE'

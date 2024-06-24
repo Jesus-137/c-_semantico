@@ -27,6 +27,7 @@
                             <th>ID</th>
                             <th>Numeros</th>
                             <th>Simbolos</th>
+                            <th>valor</th>
                             <th>Error</th>
                         </tr>
                     </thead>
@@ -40,6 +41,7 @@
                             <td id="totalID">0</td>
                             <td id="totalNumeros">0</td>
                             <td id="totalSimbolos">0</td>
+                            <td id="totalvalor">0</td>
                             <td id="totalError">0</td>
                         </tr>
                     </tfoot>
@@ -77,6 +79,7 @@
                     'ID': 0,
                     'Numeros': 0,
                     'Simbolos': 0,
+                    'valor': 0,
                     'Error': 0
                 };
 
@@ -87,6 +90,7 @@
                     const tdID = document.createElement("td");
                     const tdNumeros = document.createElement("td");
                     const tdSimbolos = document.createElement("td");
+                    const tdvalors = document.createElement("td");
                     const tdError = document.createElement("td");
 
                     tdToken.textContent = token[1];
@@ -108,6 +112,10 @@
                         tdSimbolos.textContent = 'x';
                         classifications['Simbolos']++;
                     }
+                    if (token[0] === 'STRING') {
+                        tdvalors.textContent = 'x';
+                        classifications['valor']++;
+                    }
                     if (token[0] === 'ERROR') {
                         tdError.textContent = 'x';
                         classifications['Error']++;
@@ -117,6 +125,7 @@
                     tr.appendChild(tdID);
                     tr.appendChild(tdNumeros);
                     tr.appendChild(tdSimbolos);
+                    tr.appendChild(tdvalors);
                     tr.appendChild(tdError);
 
                     tbody.appendChild(tr);
@@ -127,6 +136,7 @@
                 document.getElementById("totalID").textContent = classifications['ID'];
                 document.getElementById("totalNumeros").textContent = classifications['Numeros'];
                 document.getElementById("totalSimbolos").textContent = classifications['Simbolos'];
+                document.getElementById("totalvalor").textContent = classifications['valor'];
                 document.getElementById("totalError").textContent = classifications['Error'];
             });
         }

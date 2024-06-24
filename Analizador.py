@@ -5,8 +5,8 @@ import re
 
 app = Flask(__name__)
 
-KEYWORDS = {'inicio', 'cadena', 'proceso', 'si', 'ver', 'fin'}
-SYMBOLS = {';', '{', '}', '=', '<=', '++', '(', ')', '.'}
+KEYWORDS = {'for', 'int', 'return', 'include', 'iostream'}
+SYMBOLS = {';', '{', '}', '#', '=', '::', '<', '>','<=', '++', '(', ')', '.'}
 IDENTIFIER = r'[a-zA-Z_]\w*'
 NUMBER = r'\d+'
 STRING = r'".*?"'
@@ -35,6 +35,7 @@ def classify_tokens(tokens):
         'ID': 0,
         'Numeros': 0,
         'Simbolos': 0,
+        'valor': 0,
         'Error': 0
     }
 
@@ -47,6 +48,8 @@ def classify_tokens(tokens):
             classification['Numeros'] += 1
         elif token_type == 'SYMBOL':
             classification['Simbolos'] += 1
+        elif token_type == 'STRING':
+            classification['valor'] += 1
         else:
             classification['Error'] += 1
     
@@ -76,48 +79,32 @@ def parse_semantic(data):
 class syntactic_module:
     tokens = tokens
 
-    def p_program(p):
-        'program : inicio cadena entero proceso si fin'
+    def p_exprecion(p):
+        '''exprecion : inicio var funtion'''
         p[0] = 'Sintaxis Correcta'
+
+    def p_var(p):
+        '''var : INT VARIABLE EQUALS VALOR SEMICOLON'''
+        p[0] =  'Sintaxis Correcta'
 
     def p_inicio(p):
-        'inicio : INICIO SEMICOLON'
+        '''inicio : HASH INCLUDE MENOR IOSTREAM MAYOR'''
         p[0] = 'Sintaxis Correcta'
 
-    def p_declaracion(p):
-        '''cadena : CADENA VARIABLE EQUALS VALOR SEMICOLON'''
-        p[0] = 'Sintaxis Correcta'
-
-    def p_eclaracion2(p):
-        '''entero : ENTERO VARIABLE EQUALS VALOR SEMICOLON'''
+    def p_funtion(p):
+        '''funtion : INT MAIN LPAREN RPAREN statement_block'''
         p[0] = 'Sintaxis Correcta'
 
     def p_statement_block(p):
-        'statement_block : LBRACE statement si2 RBRACE'
+        '''statement_block : LBRACE statement return RBRACE'''
         p[0] = 'Sintaxis Correcta'
 
-    def p_statement_block2(p):
-        'statement_block2 : LBRACE statement RBRACE'
+    def p_return(p):
+        'return : RETURN VALOR SEMICOLON'
         p[0] = 'Sintaxis Correcta'
 
-    def p_proceso(p):
-        '''proceso : PROCESO SEMICOLON'''
-        p[0] = 'Sintaxis Correcta'
-    
-    def p_si(p):
-        '''si : SI LPAREN VALOR EQUALS EQUALS VALOR RPAREN statement_block'''
-        p[0] = 'Sintaxis Correcta'
-    
     def p_statement(p):
-        '''statement : VER VALOR SEMICOLON'''
-        p[0] = 'Sintaxis Correcta'
-
-    def p_si2(p):
-        '''si2 : SI LPAREN VARIABLE EQUALS EQUALS VALOR RPAREN statement_block2'''
-        p[0] = 'Sintaxis Correcta'
-
-    def p_fin(p):
-        '''fin : FIN SEMICOLON'''
+        '''statement : STD DOTDOT DOTDOT COUT MENOR MENOR VARIABLE SEMICOLON'''
         p[0] = 'Sintaxis Correcta'
 
     def p_error(p):
@@ -133,68 +120,36 @@ class semantic_module:
     tokens = tokens
 
     def p_program(p):
-        'program : inicio cadena entero proceso si fin'
-        p[0] = 'Sintaxis Correcta'
+        '''program : inicio variable funtion'''
+        p[0] = 'Semantico Correcta'
+
+    def p_variable(p):
+        '''variable : INT VARIABLE EQUALS VALOR SEMICOLON'''
+        p.parser.declared_variable = p[2]
+        p[0] =  'Sintaxis Correcta'
 
     def p_inicio(p):
-        'inicio : INICIO SEMICOLON'
+        '''inicio : HASH INCLUDE MENOR IOSTREAM MAYOR'''
         p[0] = 'Sintaxis Correcta'
 
     def p_declaracion(p):
-        '''cadena : CADENA VARIABLE EQUALS VALOR SEMICOLON'''
-        p.parser.declared_var1 = p[2]
-        p.parser.declared_caracter1 = p[4]
-        p[0] = 'Sintaxis Correcta'
-
-    def p_eclaracion2(p):
-        '''entero : ENTERO VARIABLE EQUALS VALOR SEMICOLON'''
-        p.parser.declared_var2 = p[2]
-        p.parser.declared_caracter2 = p[4]
+        '''funtion : INT MAIN LPAREN RPAREN statement_block'''
         p[0] = 'Sintaxis Correcta'
 
     def p_statement_block(p):
-        'statement_block : LBRACE statement si2 RBRACE'
-        p[0] = 'Sintaxis Correcta'
-
-    def p_statement_block2(p):
-        'statement_block2 : LBRACE statement RBRACE'
+        '''statement_block : LBRACE statement return RBRACE'''
         p[0] = 'Sintaxis Correcta'
 
     def p_proceso(p):
-        '''proceso : PROCESO SEMICOLON'''
-        p[0] = 'Sintaxis Correcta'
-    
-    def p_si(p):
-        '''si : SI LPAREN VALOR EQUALS EQUALS VALOR RPAREN statement_block'''
-        p[0] = 'Sintaxis Correcta'
-    
-    def p_statement(p):
-        '''statement : VER VALOR SEMICOLON'''
+        'return : RETURN VALOR SEMICOLON'
         p[0] = 'Sintaxis Correcta'
 
-    def p_si2(p):
-        '''si2 : SI LPAREN VARIABLE EQUALS EQUALS VALOR RPAREN statement_block2'''
-        if p[3] == p.parser.declared_var1:
-            if p[6] == p.parser.declared_caracter1:
-                p[0] = 'Sintaxis Correcta'
-            else:
-                p.parser.has_error = True
-                p[0] = f"Error: Se esperaba la variable declarada {p.parser.declared_var}"
-                return p[0]
-        elif p[3] == p.parser.declared_var2:
-            if p[6] == p.parser.declared_caracter2:
-                p[0] = 'Sintaxis Correcta'
-            else:
-                p.parser.has_error = True
-                p[0] = f"Error: Se esperaba la variable declarada {p.parser.declared_var}"
-                return p[0]
-        else:
+    def p_statement(p):
+        '''statement : STD DOTDOT DOTDOT COUT MENOR MENOR VARIABLE SEMICOLON'''
+        if p[7] != p.parser.declared_variable:
             p.parser.has_error = True
             p[0] = f"Error: Se esperaba la variable declarada {p.parser.declared_var}"
             return p[0]
-        
-    def p_fin(p):
-        '''fin : FIN SEMICOLON'''
         p[0] = 'Sintaxis Correcta'
 
     def p_error(p):
